@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 class Prediccion:
-    def __init__(self, data):
-        self.data = pd.read_csv(data)
+    def __init__(self):
+        self.data = pd.read_csv("./data/Estadisticas.csv")
         self.le_dict = {}
         self.rf_model = None
         self.features = ['SubDelito', 'Hora', 'Victima', 'SubVictima', 'Edad', 'Sexo', 'Nacionalidad', 'Provincia', 'Canton', 'Distrito', 'DiaSemana', 'Mes']

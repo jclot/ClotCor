@@ -1,26 +1,31 @@
 <div align="center">
+  <img src="public/images/icons/Clotcor_Icon.png" alt="ClotCor Logo" width="150" />
+  
   <h1>ClotCor</h1>
 
-  [![Python](https://img.shields.io/badge/Python-3.x-blue)](#)
-  [![License](https://img.shields.io/badge/License-MIT-green)](#)
-  [![Template](https://img.shields.io/badge/Template-Python__Project-lightgrey)](#)
+  [![Python](https://img.shields.io/badge/Python-3.x-blue)](#) 
+  [![License](https://img.shields.io/badge/License-MIT-green)](#) 
+  [![Domain](https://img.shields.io/badge/Domain-Predictive_Criminology-orange)](#)
 </div>
 
-ClotCor is a modular Python framework designed for data processing and the implementation of predictive algorithms. Generated from a robust Python project template, it provides a structured and scalable environment for developing, testing, and deploying computational models and analytical tools.
+ClotCor is a dedicated Python framework designed for data processing and the implementation of predictive geographic crime statistical analysis. It utilizes historical registered criminal activity data to build models capable of projecting and visualizing areas with higher or lower delictual probability (crime hotspots).
 
 ---
 
 ## Overview
 
-The primary focus of ClotCor is to serve as a reliable foundation for predictive algorithm execution. By standardizing the project structure, it ensures that data handling, core logic, and testing are strictly separated, adhering to software engineering best practices for Python applications.
+The primary focus of ClotCor is to serve as a reliable foundation for executing predictive algorithms in the field of geographic criminology. It is engineered to ingested standardized historical datasets provided by the **OIJ** (Organismo de Investigación Judicial). 
+
+By analyzing the spatial and temporal attributes of past registered criminal events, ClotCor generates statistical projections that identify high-risk versus low-risk geographic areas. By standardizing the project structure, it ensures that sensitive data handling, core modeling logic, and validation tests are strictly separated, adhering to software engineering best practices for Python computational applications.
 
 ### Key Characteristics
 
-* **Predictive Modeling:** Core modules designed to integrate and execute predictive algorithms.
-* **Data Segregation:** Dedicated directories for dataset management to keep logic and data isolated.
-* **Container-Ready:** Includes a `Containerfile` for seamless Docker/Podman containerization and deployment.
-* **Automated Tooling:** Integrates a comprehensive `Makefile` to streamline development tasks such as testing, linting, and environment setup.
-* **Documentation Built-In:** Pre-configured with MkDocs for maintaining project documentation.
+* **Predictive Hotspotting:** Specialized modules designed to integrate and execute algorithms that predict delictual trends across geographic zones.
+* **Geographic Crime Statistics:** Processing and visualization of criminal statistics based on spatial data.
+* **Data Segregation:** Dedicated directories for dataset management to keep OIJ historical data logic isolated from the core algorithm.
+* **Container-Ready:** Includes a `Containerfile` for seamless Docker/Podman containerization and reproducible deployment of the model.
+* **Automated Tooling:** Integrates a comprehensive `Makefile` to streamline development tasks such as model testing, linting, and environment setup.
+* **Documentation Built-In:** Pre-configured with MkDocs for maintaining project and model documentation.
 
 ---
 
@@ -30,12 +35,12 @@ The repository follows a standard and highly organized Python package layout:
 
 ```text
 ClotCor/
-├── clotcor/             # Main application package and core algorithmic logic
-├── data/                # Directory for input datasets and algorithmic output
+├── clotcor/             # Main application package and core predictive logic
+├── data/                # Directory for OIJ input datasets and generated outputs
 ├── docs/                # MkDocs documentation source files
-├── tests/               # Unit and integration test suites
+├── tests/               # Unit, integration, and model validation test suites
 ├── tools/               # Auxiliary scripts and development tools
-├── Containerfile        # Container image definition for isolated execution
+├── Containerfile        # Container image definition for isolated model execution
 ├── HISTORY.md           # Changelog and version history
 ├── Makefile             # Automation script for development workflows
 ├── mkdocs.yml           # Configuration for the MkDocs documentation generator
@@ -67,7 +72,7 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 
 ### 3. Install Dependencies
 
-Install the required packages, including the dependencies for the predictive algorithms:
+Install the required packages, including the dependencies needed for the predictive modeling algorithms:
 
 ```bash
 pip install -r requirements.txt
@@ -85,7 +90,7 @@ pip install -e .
 
 ClotCor utilizes a `Makefile` to automate common development workflows. Ensure `make` is installed on your system.
 
-### Running Tests
+### Running Tests and Model Validation
 
 To execute the test suite located in the `tests/` directory:
 
@@ -95,7 +100,7 @@ make test
 
 ### Containerization
 
-If you prefer to run the application within an isolated container environment, you can build the image using the provided `Containerfile`:
+If you prefer to run the predictive model within an isolated container environment, you can build the image using the provided `Containerfile`:
 
 ```bash
 docker build -t clotcor-env -f Containerfile .

@@ -1,12 +1,4 @@
 {
-    "Delito": [
-        "ASALTO",
-        "HOMICIDIO",
-        "HURTO",
-        "ROBO",
-        "ROBO DE VEHICULO",
-        "TACHA DE VEHICULO"
-    ],
     "SubDelito": [
         "ARMA BLANCA",
         "ARMA CONTUNDENTE",
@@ -146,7 +138,8 @@
         "EL AMBIENTE [OTROS]",
         "CAF&#201; INTERNET [EDIFICACION]",
         "SIN CLASIFICAR [OTROS]",
-        "RENTA DE AUTOS [EDIFICACION]"
+        "RENTA DE AUTOS [EDIFICACION]",
+        "NINGUNO"
     ],
     "Edad": [
         "Mayor de edad",
@@ -269,7 +262,8 @@
         "GUAYANA FRANCESA",
         "CURAZAO",
         "GEORGIA",
-        "ARUBA"
+        "ARUBA",
+        "NINGUNO"
     ],
     "Provincia": [
         "SAN JOSE",
@@ -367,10 +361,12 @@
         "ACOSTA",
         "JIMENEZ",
         "NANDAYURE",
-        "TURRUBARES"
+        "TURRUBARES",
+        "NINGUNO"
     ],
     "Distrito": [
         "OSA",
-        "QUEPOS"
+        "QUEPOS",
+        "NINGUNO"
     ]
 }

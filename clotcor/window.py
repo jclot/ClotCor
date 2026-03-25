@@ -5,8 +5,9 @@ from clotcor.base import Prediccion
 class Window:
     def __init__(self):
         self.window = tk.Tk()
+        self.window.resizable(0, 0)
         self.window.title("Prevencion de delitos en Costa Rica")
-        self.window.geometry("650x630")
+        self.window.geometry("650x590")
         self.window.configure(bg="#0471A6") 
         self.frame = tk.Frame(self.window, padx=20, pady=20, bg='#061826')
         self.frame.grid()
@@ -36,8 +37,8 @@ class Window:
         option_menu.config(bg='#3685B5', font=("Arial", 10), relief="groove")
    
     def window_content(self):
-        self.labels = ["Delito", "Hora", "SubDelito", "Victima", "SubVictima", "Edad", "Sexo", 
-                  "Nacionalidad", "Provincia", "Canton", "Distrito", "DiaSemana", "Mes"]
+        self.labels = ["SubDelito", "Victima", "SubVictima", "Edad", "Sexo", "Nacionalidad", "Provincia", 
+                  "Canton", "Distrito", "Hora", "DiaSemana", "Mes"]
         
         for idx, text in enumerate(self.labels, start=1):
             label = tk.Label(self.frame, text=text, bg="#89AAE6", font=("Arial", 10, "bold"))

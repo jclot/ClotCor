@@ -22,11 +22,14 @@ def read(*paths, **kwargs):
 
 
 def read_requirements(path):
-    return [
-        line.strip()
-        for line in read(path).split("\n")
-        if not line.startswith(('"', "#", "-", "git+"))
-    ]
+    try:
+        return [
+            line.strip()
+            for line in read(path).split("\n")
+            if not line.startswith(('"', "#", "-", "git+"))
+        ]
+    except FileNotFoundError:
+        return []
 
 
 setup(

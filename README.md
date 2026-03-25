@@ -1,85 +1,125 @@
+<div align="center">
+  <img src="public/images/icons/Clotcor_Icon.png" alt="ClotCor Logo" width="150" />
+  
+  <h1>ClotCor</h1>
 
-# Python Project Template
+  [![Python](https://img.shields.io/badge/Python-3.x-blue)](#) 
+  [![License](https://img.shields.io/badge/License-MIT-green)](#) 
+  [![Domain](https://img.shields.io/badge/Domain-Predictive_Criminology-orange)](#)
+</div>
 
-A low dependency and really simple to start project template for Python Projects.
-
-See also 
-- [Flask-Project-Template](https://github.com/rochacbruno/flask-project-template/) for a full feature Flask project including database, API, admin interface, etc.
-- [FastAPI-Project-Template](https://github.com/rochacbruno/fastapi-project-template/) The base to start an openapi project featuring: SQLModel, Typer, FastAPI, JWT Token Auth, Interactive Shell, Management Commands.
-
-### HOW TO USE THIS TEMPLATE
-
-> **DO NOT FORK** this is meant to be used from **[Use this template](https://github.com/rochacbruno/python-project-template/generate)** feature.
-
-1. Click on **[Use this template](https://github.com/rochacbruno/python-project-template/generate)**
-3. Give a name to your project  
-   (e.g. `my_awesome_project` recommendation is to use all lowercase and underscores separation for repo names.)
-3. Wait until the first run of CI finishes  
-   (Github Actions will process the template and commit to your new repo)
-4. If you want [codecov](https://about.codecov.io/sign-up/) Reports and Automatic Release to [PyPI](https://pypi.org)  
-  On the new repository `settings->secrets` add your `PYPI_API_TOKEN` and `CODECOV_TOKEN` (get the tokens on respective websites)
-4. Read the file [CONTRIBUTING.md](CONTRIBUTING.md)
-5. Then clone your new project and happy coding!
-
-> **NOTE**: **WAIT** until first CI run on github actions before cloning your new project.
-
-### What is included on this template?
-
-- 🖼️ Templates for starting multiple application types:
-  * **Basic low dependency** Python program (default) [use this template](https://github.com/rochacbruno/python-project-template/generate)
-  * **Flask** with database, admin interface, restapi and authentication [use this template](https://github.com/rochacbruno/flask-project-template/generate).
-  **or Run `make init` after cloning to generate a new project based on a template.**
-- 📦 A basic [setup.py](setup.py) file to provide installation, packaging and distribution for your project.  
-  Template uses setuptools because it's the de-facto standard for Python packages, you can run `make switch-to-poetry` later if you want.
-- 🤖 A [Makefile](Makefile) with the most useful commands to install, test, lint, format and release your project.
-- 📃 Documentation structure using [mkdocs](http://www.mkdocs.org)
-- 💬 Auto generation of change log using **gitchangelog** to keep a HISTORY.md file automatically based on your commit history on every release.
-- 🐋 A simple [Containerfile](Containerfile) to build a container image for your project.  
-  `Containerfile` is a more open standard for building container images than Dockerfile, you can use buildah or docker with this file.
-- 🧪 Testing structure using [pytest](https://docs.pytest.org/en/latest/)
-- ✅ Code linting using [flake8](https://flake8.pycqa.org/en/latest/)
-- 📊 Code coverage reports using [codecov](https://about.codecov.io/sign-up/)
-- 🛳️ Automatic release to [PyPI](https://pypi.org) using [twine](https://twine.readthedocs.io/en/latest/) and github actions.
-- 🎯 Entry points to execute your program using `python -m <clotcor>` or `$ clotcor` with basic CLI argument parsing.
-- 🔄 Continuous integration using [Github Actions](.github/workflows/) with jobs to lint, test and release your project on Linux, Mac and Windows environments.
-
-> Curious about architectural decisions on this template? read [ABOUT_THIS_TEMPLATE.md](ABOUT_THIS_TEMPLATE.md)  
-> If you want to contribute to this template please open an [issue](https://github.com/rochacbruno/python-project-template/issues) or fork and send a PULL REQUEST.
-
-[❤️ Sponsor this project](https://github.com/sponsors/rochacbruno/)
-
-<!--  DELETE THE LINES ABOVE THIS AND WRITE YOUR PROJECT README BELOW -->
+ClotCor is a dedicated Python framework designed for data processing and the implementation of predictive geographic crime statistical analysis. It utilizes historical registered criminal activity data to build models capable of projecting and visualizing areas with higher or lower delictual probability (crime hotspots).
 
 ---
-# clotcor
 
-[![codecov](https://codecov.io/gh/jclot/ClotCor/branch/main/graph/badge.svg?token=ClotCor_token_here)](https://codecov.io/gh/jclot/ClotCor)
-[![CI](https://github.com/jclot/ClotCor/actions/workflows/main.yml/badge.svg)](https://github.com/jclot/ClotCor/actions/workflows/main.yml)
+## Overview
 
-Awesome clotcor created by jclot
+The primary focus of ClotCor is to serve as a reliable foundation for executing predictive algorithms in the field of geographic criminology. It is engineered to ingested standardized historical datasets provided by the **OIJ** (Organismo de Investigación Judicial). 
 
-## Install it from PyPI
+By analyzing the spatial and temporal attributes of past registered criminal events, ClotCor generates statistical projections that identify high-risk versus low-risk geographic areas. By standardizing the project structure, it ensures that sensitive data handling, core modeling logic, and validation tests are strictly separated, adhering to software engineering best practices for Python computational applications.
+
+### Key Characteristics
+
+* **Predictive Hotspotting:** Specialized modules designed to integrate and execute algorithms that predict delictual trends across geographic zones.
+* **Geographic Crime Statistics:** Processing and visualization of criminal statistics based on spatial data.
+* **Data Segregation:** Dedicated directories for dataset management to keep OIJ historical data logic isolated from the core algorithm.
+* **Container-Ready:** Includes a `Containerfile` for seamless Docker/Podman containerization and reproducible deployment of the model.
+* **Automated Tooling:** Integrates a comprehensive `Makefile` to streamline development tasks such as model testing, linting, and environment setup.
+* **Documentation Built-In:** Pre-configured with MkDocs for maintaining project and model documentation.
+
+---
+
+## Project Structure
+
+The repository follows a standard and highly organized Python package layout:
+
+```text
+ClotCor/
+├── clotcor/             # Main application package and core predictive logic
+├── data/                # Directory for OIJ input datasets and generated outputs
+├── docs/                # MkDocs documentation source files
+├── tests/               # Unit, integration, and model validation test suites
+├── tools/               # Auxiliary scripts and development tools
+├── Containerfile        # Container image definition for isolated model execution
+├── HISTORY.md           # Changelog and version history
+├── Makefile             # Automation script for development workflows
+├── mkdocs.yml           # Configuration for the MkDocs documentation generator
+├── requirements.txt     # Python package dependencies
+└── setup.py             # Package installation and distribution configuration
+```
+
+---
+
+## Installation
+
+It is recommended to use a virtual environment to avoid dependency conflicts on your host system.
+
+### 1. Clone the Repository
 
 ```bash
-pip install clotcor
+git clone [https://github.com/jclot/ClotCor.git](https://github.com/jclot/ClotCor.git)
+cd ClotCor
 ```
 
-## Usage
+### 2. Set Up the Environment
 
-```py
-from clotcor import BaseClass
-from clotcor import base_function
-
-BaseClass().base_method()
-base_function()
-```
+Create and activate a Python virtual environment:
 
 ```bash
-$ python -m clotcor
-#or
-$ clotcor
+python3 -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
 ```
 
-## Development
+### 3. Install Dependencies
 
-Read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+Install the required packages, including the dependencies needed for the predictive modeling algorithms:
+
+```bash
+pip install -r requirements.txt
+```
+
+To install the `clotcor` package locally in editable mode for development:
+
+```bash
+pip install -e .
+```
+
+---
+
+## Development and Automation
+
+ClotCor utilizes a `Makefile` to automate common development workflows. Ensure `make` is installed on your system.
+
+### Running Tests and Model Validation
+
+To execute the test suite located in the `tests/` directory:
+
+```bash
+make test
+```
+
+### Containerization
+
+If you prefer to run the predictive model within an isolated container environment, you can build the image using the provided `Containerfile`:
+
+```bash
+docker build -t clotcor-env -f Containerfile .
+```
+
+---
+
+## Documentation
+
+The project documentation is built using MkDocs. To serve the documentation locally and view it in your browser:
+
+```bash
+mkdocs serve
+```
+
+---
+
+## License and Authorship
+
+**Author:** Julián Clot Córdoba ([jclot](https://github.com/jclot))
+
+This project is open-source software licensed under the **MIT License**. Please refer to the `LICENSE` file for full terms and conditions.

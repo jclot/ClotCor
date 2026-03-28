@@ -8,21 +8,26 @@
   [![Domain](https://img.shields.io/badge/Domain-Predictive_Criminology-orange)](#)
 </div>
 
-ClotCor is a dedicated Python framework designed for data processing and the implementation of predictive geographic crime statistical analysis. It utilizes historical registered criminal activity data to build models capable of projecting and visualizing areas with higher or lower delictual probability (crime hotspots).
+ClotCor is a Python framework focused on predictive crime analytics, statistical exploration, and interactive visualization. It processes historical crime records and builds multi-model classifiers to estimate crime-type probabilities and detect temporal/geographic hotspots.
 
 ---
 
 ## Overview
 
-The primary focus of ClotCor is to serve as a reliable foundation for executing predictive algorithms in the field of geographic criminology. It is engineered to ingested standardized historical datasets provided by the **OIJ** (Organismo de Investigación Judicial). 
+The primary focus of ClotCor is to serve as a reliable foundation for executing predictive algorithms in the field of geographic criminology. It is engineered to ingest standardized historical datasets provided by the **OIJ** (Organismo de Investigación Judicial). 
 
-By analyzing the spatial and temporal attributes of past registered criminal events, ClotCor generates statistical projections that identify high-risk versus low-risk geographic areas. By standardizing the project structure, it ensures that sensitive data handling, core modeling logic, and validation tests are strictly separated, adhering to software engineering best practices for Python computational applications.
+By analyzing the spatial and temporal attributes of past registered criminal events, ClotCor generates projections that estimate the most likely crime category and the probability of each class. The architecture separates data handling, preprocessing, modeling, analytics, plotting, and UI responsibilities to improve maintainability and accuracy.
 
 ### Key Characteristics
 
-* **Predictive Hotspotting:** Specialized modules designed to integrate and execute algorithms that predict delictual trends across geographic zones.
-* **Geographic Crime Statistics:** Processing and visualization of criminal statistics based on spatial data.
-* **Data Segregation:** Dedicated directories for dataset management to keep OIJ historical data logic isolated from the core algorithm.
+* **Controlled Model Tuning:** Trains and compares candidate models under temporal validation, then selects the best configuration.
+* **Probability Outputs:** Returns top crime probabilities for each prediction request.
+* **Leakage Guard + Calibration:** Detects highly leaky features and calibrates probabilities to avoid unrealistic confidence inflation.
+* **Robust Preprocessing:** Cleans nulls, handles unknown categories, and engineers temporal cyclic features.
+* **Future Risk Engine:** Adds spatio-temporal forecasting, predictive heatmaps, and dangerous date-area ranking.
+* **Geographic Crime Statistics:** Produces trend charts, heatmaps, and feature-importance views.
+* **Modern Qt GUI:** Guided PySide6 interface designed for non-technical users.
+* **Layered Architecture:** Separated modules for `data`, `modeling`, `analytics`, `visualization`, and `ui`.
 * **Container-Ready:** Includes a `Containerfile` for seamless Docker/Podman containerization and reproducible deployment of the model.
 * **Automated Tooling:** Integrates a comprehensive `Makefile` to streamline development tasks such as model testing, linting, and environment setup.
 * **Documentation Built-In:** Pre-configured with MkDocs for maintaining project and model documentation.
@@ -35,16 +40,17 @@ The repository follows a standard and highly organized Python package layout:
 
 ```text
 ClotCor/
-├── clotcor/             # Main application package and core predictive logic
-├── data/                # Directory for OIJ input datasets and generated outputs
+├── clotcor/
+│   ├── analytics/       # Statistical summaries and descriptive metrics
+│   ├── data/            # Data loading and preprocessing pipeline
+│   ├── modeling/        # Model training, evaluation, and prediction engine
+│   ├── ui/              # PySide6 (Qt) desktop interface
+│   ├── visualization/   # Matplotlib/Seaborn chart factory
+│   ├── base.py          # Backward-compatible exports
+│   └── cli.py           # Application entry point
+├── data/                # OIJ datasets and serialized trained models
 ├── docs/                # MkDocs documentation source files
-├── tests/               # Unit, integration, and model validation test suites
-├── tools/               # Auxiliary scripts and development tools
-├── Containerfile        # Container image definition for isolated model execution
-├── HISTORY.md           # Changelog and version history
-├── Makefile             # Automation script for development workflows
-├── mkdocs.yml           # Configuration for the MkDocs documentation generator
-├── requirements.txt     # Python package dependencies
+├── tests/               # Unit and integration test suites
 └── setup.py             # Package installation and distribution configuration
 ```
 

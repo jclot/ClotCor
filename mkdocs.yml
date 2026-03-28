@@ -1,2 +1,22 @@
-site_name: clotcor
-theme: readthedocs
+site_name: ClotCor
+site_description: Predictive crime analytics with calibrated classification and spatio-temporal risk forecasting
+site_author: ClotCor
+theme:
+  name: readthedocs
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - tables
+  - pymdownx.superfences 
+  - pymdownx.details   
+
+nav:
+  - Home: index.md
+  - About: about.md
+  - Methodology: methodology.md
+  - Usage: usage.md
+  - Troubleshooting: troubleshooting.md
+
+extra_css:
+  - stylesheets/styles.css

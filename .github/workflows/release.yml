@@ -1,52 +1,57 @@
-name: Upload Python Package
-permissions:
-  contents: write
+name: Release
 
 on:
   push:
-    # Sequence of patterns matched against refs/tags
     tags:
-      - '*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
-  # Allows you to run this workflow manually from the Actions tab
+      - "v*"
+      - "[0-9]*"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  release:
-    name: Create Release
+  github_release:
+    name: Create GitHub Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          # by default, it uses a depth of 1
-          # this fetches all history so that we can read each commit
           fetch-depth: 0
-      - name: Generate Changelog
+
+      - name: Generate release notes
         run: .github/release_message.sh > release_message.md
-      - name: Release
+
+      - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
           body_path: release_message.md
 
-  deploy:
-    needs: release
+  pypi_publish:
+    name: Publish to PyPI
+    needs: github_release
     runs-on: ubuntu-latest
+    if: ${{ secrets.PYPI_API_TOKEN != '' }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel twine
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        python setup.py sdist bdist_wheel
-        twine upload dist/*
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Build package
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+          python -m build
+          twine check dist/*
+
+      - name: Upload package to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: twine upload dist/*

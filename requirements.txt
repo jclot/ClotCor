@@ -4,8 +4,11 @@
 # or run `make init` to create this file automatically based on the template.
 # You can also run `make switch-to-poetry` to use the poetry package manager.
 
-pandas
-scikit-learn
-numpy 
-seaborn
-matplotlib
+pandas>=2.1
+numpy>=1.23.5,<2.3
+scipy>=1.11,<1.15
+scikit-learn>=1.5,<1.7
+seaborn>=0.13.2
+matplotlib>=3.8
+joblib>=1.4
+PySide6>=6.7,<6.9

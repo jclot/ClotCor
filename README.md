@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/images/icons/Clotcor_Icon.png" alt="ClotCor Logo" width="150" />
+  <img src="public/images/icons/Clotcor_Icon.png" alt="ClotCor Logo" width="200" />
   
   <h1>ClotCor</h1>
 

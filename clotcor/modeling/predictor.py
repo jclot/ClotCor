@@ -4,7 +4,7 @@ import html
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Protocol, Tuple, TypedDict, cast
 
 os.environ.setdefault("LOKY_MAX_CPU_COUNT", "1")
 
@@ -28,11 +28,20 @@ from clotcor.modeling.risk_engine import RiskReport, SpatioTemporalRiskEngine
 from clotcor.visualization import CrimePlotFactory
 
 
+class ProbabilityEntry(TypedDict):
+    delito: str
+    probabilidad: float
+
+
+class SupportsPredictProba(Protocol):
+    def predict_proba(self, x_data: pd.DataFrame) -> np.ndarray: ...
+
+
 @dataclass
 class PredictionPayload:
     predicted_label: str
     confidence: float
-    top_probabilities: List[Dict[str, float]]
+    top_probabilities: List[ProbabilityEntry]
 
 
 class Prediccion:
@@ -340,6 +349,13 @@ class Prediccion:
         row_sum[row_sum == 0] = 1.0
         return smoothed / row_sum
 
+    @staticmethod
+    def _predict_proba(model: object, x_data: pd.DataFrame) -> np.ndarray:
+        if not hasattr(model, "predict_proba"):
+            raise RuntimeError("Current model does not expose predict_proba.")
+        predictor = cast(SupportsPredictProba, model)
+        return np.asarray(predictor.predict_proba(x_data))
+
     def _tune_calibration_and_smoothing(
         self, base_model: Pipeline, x_val: pd.DataFrame, y_val: pd.Series
     ) -> Tuple[str, float, List[Dict[str, object]]]:
@@ -358,7 +374,7 @@ class Prediccion:
             classes = self._get_classes(model)
             if classes.size == 0:
                 continue
-            raw_prob = model.predict_proba(x_val)
+            raw_prob = self._predict_proba(model, x_val)
             for alpha in smoothing_candidates:
                 prob = self._apply_smoothing(raw_prob, alpha=alpha)
                 pred = classes[np.argmax(prob, axis=1)]
@@ -601,8 +617,10 @@ class Prediccion:
             matrix = confusion_matrix(y_test, y_pred, labels=labels, normalize="true")
             return self.plot_factory.confusion_matrix_figure(matrix, labels)
 
-        labels = self._get_classes(self.model).tolist()
+        labels = [str(item) for item in self._get_classes(self.model).tolist()]
         matrix = self.confusion_matrix_normalized
+        if matrix is None:
+            matrix = np.zeros((len(labels), len(labels)), dtype=float)
         return self.plot_factory.confusion_matrix_figure(matrix, labels)
 
     def plot_feature_importance(self):
@@ -614,9 +632,12 @@ class Prediccion:
         if not self.is_trained:
             self.load_or_train(force_retrain=False)
         prepared = self.preprocessor.prepare_inference_data(input_data)
-        probabilities = self.model.predict_proba(prepared)
+        model = self.model
+        if model is None:
+            raise RuntimeError("Model is not available for inference.")
+        probabilities = self._predict_proba(model, prepared)
         probabilities = self._apply_smoothing(probabilities, alpha=self.probability_smoothing)
-        classes = self._get_classes(self.model)
+        classes = self._get_classes(model)
         prediction = classes[np.argmax(probabilities, axis=1)]
         return prediction, probabilities
 
@@ -629,10 +650,14 @@ class Prediccion:
         prediction, probabilities = self.predict_crime(new_data)
         labels = self._get_classes(self.model).tolist()
         top_indices = np.argsort(probabilities[0])[::-1][:top_n]
-        top_probabilities = [
-            {"delito": labels[index], "probabilidad": float(probabilities[0][index])}
-            for index in top_indices
-        ]
+        top_probabilities: List[ProbabilityEntry] = []
+        for index in top_indices:
+            top_probabilities.append(
+                {
+                    "delito": str(labels[index]),
+                    "probabilidad": float(probabilities[0][index]),
+                }
+            )
         payload = PredictionPayload(
             predicted_label=str(prediction[0]),
             confidence=float(np.max(probabilities[0])),

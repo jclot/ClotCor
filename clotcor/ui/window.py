@@ -291,6 +291,21 @@ class FutureRiskDialog(QDialog):
         value = value.strip()
         return value if value else None
 
+    @staticmethod
+    def _as_object_dict(value: object) -> Dict[str, object]:
+        return value if isinstance(value, dict) else {}
+
+    @staticmethod
+    def _safe_float(value: object, default: float = 0.0) -> float:
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            try:
+                return float(value)
+            except ValueError:
+                return default
+        return default
+
     def compute_report(self) -> None:
         try:
             report = self.predictor.get_spatiotemporal_report(
@@ -304,20 +319,20 @@ class FutureRiskDialog(QDialog):
                 horizon_days=int(self.horizon_spin.value()),
             )
             area_level = self.area_level_combo.currentText()
-            area_info = report.answers.get("most_probable_area_for_crime", {})
-            area_name = area_info.get(area_level, "--")
-            area_prob = float(area_info.get("Probabilidad", 0.0))
+            area_info = self._as_object_dict(report.answers.get("most_probable_area_for_crime", {}))
+            area_name = str(area_info.get(area_level, "--"))
+            area_prob = self._safe_float(area_info.get("Probabilidad", 0.0))
             self.answer_area.setText(f"Most probable area for this crime: {area_name} ({area_prob:.2%})")
 
-            danger_info = report.answers.get("most_dangerous_date_area", {})
+            danger_info = self._as_object_dict(report.answers.get("most_dangerous_date_area", {}))
             danger_date = str(danger_info.get("Fecha", "--"))[:10]
-            danger_area = danger_info.get(area_level, "--")
-            danger_score = float(danger_info.get("RiesgoEsperado", 0.0))
+            danger_area = str(danger_info.get(area_level, "--"))
+            danger_score = self._safe_float(danger_info.get("RiesgoEsperado", 0.0))
             self.answer_danger.setText(
                 f"Most dangerous date and area in selected horizon: {danger_date} | {danger_area} | expected risk {danger_score:.2f}"
             )
 
-            forecast_total = float(report.answers.get("forecast_total_next_horizon", 0.0))
+            forecast_total = self._safe_float(report.answers.get("forecast_total_next_horizon", 0.0))
             self.answer_forecast.setText(f"Expected total incidents in horizon: {forecast_total:.1f}")
 
             forecast_fig = self.predictor.plot_factory.forecast_figure(report.forecast)
@@ -343,7 +358,8 @@ class FutureRiskDialog(QDialog):
 class Window:
     def __init__(self) -> None:
         self.prediccion = Prediccion()
-        self.app = QApplication.instance() or QApplication(sys.argv)
+        app_instance = QApplication.instance()
+        self.app = app_instance if isinstance(app_instance, QApplication) else QApplication(sys.argv)
         self.app.setStyle("Fusion")
         self.app.setFont(QFont("Segoe UI", 10))
         self.app.setStyleSheet(APP_STYLESHEET)
@@ -564,13 +580,18 @@ class Window:
     def train_model(self) -> None:
         try:
             self._set_status("Training model, tuning hyperparameters, calibrating probabilities...")
-            metrics = self.prediccion.run(force_retrain=True)
-            audit = metrics.get("data_audit", {})
-            test_metrics = metrics.get("test", {})
-            dropped = ", ".join(audit.get("dropped_leaky_features", [])) or "none"
+            metrics_raw = self.prediccion.run(force_retrain=True)
+            metrics = metrics_raw if isinstance(metrics_raw, dict) else {}
+            audit_raw = metrics.get("data_audit", {})
+            audit = audit_raw if isinstance(audit_raw, dict) else {}
+            test_raw = metrics.get("test", {})
+            test_metrics = test_raw if isinstance(test_raw, dict) else {}
+            dropped_raw = audit.get("dropped_leaky_features", [])
+            dropped_list = [str(item) for item in dropped_raw] if isinstance(dropped_raw, list) else []
+            dropped = ", ".join(dropped_list) or "none"
             self.model_label.setText(str(self.prediccion.best_model_name))
             self._set_status(
-                f"Done | F1={test_metrics.get('f1_weighted', 0.0):.3f} | split={audit.get('split_strategy')} | "
+                f"Done | F1={float(test_metrics.get('f1_weighted', 0.0)):.3f} | split={audit.get('split_strategy')} | "
                 f"calibration={audit.get('calibration_status')} | leak-guard dropped={dropped}"
             )
         except Exception as error:
@@ -590,7 +611,7 @@ class Window:
             self.prob_table.setRowCount(0)
             for row, entry in enumerate(prediction_payload.top_probabilities):
                 self.prob_table.insertRow(row)
-                self.prob_table.setItem(row, 0, QTableWidgetItem(entry["delito"]))
+                self.prob_table.setItem(row, 0, QTableWidgetItem(str(entry["delito"])))
                 self.prob_table.setItem(row, 1, QTableWidgetItem(f"{entry['probabilidad']:.2%}"))
 
             fig = self.prediccion.get_probability_figure(prediction_payload)
@@ -619,8 +640,9 @@ class Window:
     def show_future_risk(self) -> None:
         try:
             self._set_status("Opening future risk assistant...")
+            province_combo = self.inputs.get("Provincia")
             defaults = {
-                "Provincia": self.inputs.get("Provincia").currentText() if "Provincia" in self.inputs else "",
+                "Provincia": province_combo.currentText() if province_combo is not None else "",
             }
             dialog = FutureRiskDialog(self.prediccion, defaults, self.main)
             dialog.exec()

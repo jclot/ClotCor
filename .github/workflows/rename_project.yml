@@ -45,6 +45,6 @@ jobs:
 
       - name: Commit changes
         if: steps.marker.outputs.is_template == 'true'
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "Template rename automation applied"
